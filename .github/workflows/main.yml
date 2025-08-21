@@ -40,7 +40,7 @@ jobs:
     - name: run docker container
       run: docker run -d --name monapp_test -p 5000:5000 monapp:latest
     - name: check container status
-      run: docker ps --filter name:monapp_test
+      run: docker ps --filter name=monapp_test
     - name: test container response
       run: |
         sleep 5
