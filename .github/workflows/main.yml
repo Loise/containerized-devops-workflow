@@ -36,7 +36,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build Docker image
-      run: docker build -t monapp:latest.
+      run: docker build -t monapp:latest .
     - name: run docker container
       run: docker run -d --name monapp_test -p 5000:5000 monapp:latest
     - name: check container status
