@@ -23,7 +23,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE="ghcr.io/loise/${{ github.repository }}/monapp:latest"
+          IMAGE="ghcr.io/loise/containerized-devops-workflow/monapp:latest"
           echo "Building image $IMAGE"
           docker build -t $IMAGE .
 
