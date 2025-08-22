@@ -25,8 +25,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker image
-        run: |
-          IMAGE="ghcr.io/loise/containerized-devops-workflow/monapp:latest"
-          echo "Building image $IMAGE"
-          docker build -t $IMAGE .
-          docker push $IMAGE
+        run: docker build -t ghcr.io/loise/containerized-devops-workflow/monapp:latest .
+
+      
+      - name: Push Docker image to ghcr
+        run: docker push ghcr.io/loise/containerized-devops-workflow/monapp:latest
