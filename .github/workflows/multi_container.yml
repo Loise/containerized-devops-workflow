@@ -1,4 +1,4 @@
-name: lint, test, and run containerized flask app with Docker Compose
+name: test multi container
 
 on: [push]
 
