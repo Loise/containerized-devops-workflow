@@ -30,7 +30,7 @@ jobs:
 
       # Démarrage des conteneurs définis dans docker-compose.yml avant de lancer les tests
       - name: Start docker-compose services
-        run: docker-compose -f docker-compose.yml up -d
+        run: docker compose -f docker-compose.yml up -d
 
       # Attente que l'API soit prête avant d’exécuter les tests
       - name: Wait for API to be ready
@@ -50,4 +50,4 @@ jobs:
 
       # Arrêt et nettoyage des conteneurs après les tests
       - name: Stop and remove containers
-        run: docker-compose down
+        run: docker compose down
