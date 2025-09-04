@@ -43,6 +43,9 @@ jobs:
             echo "Waiting for API..."
             sleep 3
           done
+      
+      - name: container status
+        run: docker ps
 
       - name: Set up Python
         uses: actions/setup-python@v4
