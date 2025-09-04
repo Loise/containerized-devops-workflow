@@ -4,7 +4,8 @@ from app import app
 @pytest.fixture
 def client_app():
     with app.test_client() as client:
-        yield client
+        with app.app_context():
+            yield client
 
 def test_health(client_app):
     res = client_app.get("/health")
@@ -15,8 +16,8 @@ def test_hello(client_app):
     assert res.status_code == 200
 
 @pytest.mark.integration
-def test_db_connection(client_app):
     res = client_app.get("/dbtest")
+    print(res.data)
     assert res.status_code == 200
     json_data = res.get_json()
     assert json_data.get("db_connection") == "successful"
