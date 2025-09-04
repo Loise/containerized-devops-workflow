@@ -16,6 +16,7 @@ def test_hello(client_app):
     assert res.status_code == 200
 
 @pytest.mark.integration
+def test_dbtest(client_app):
     res = client_app.get("/dbtest")
     print(res.data)
     assert res.status_code == 200
