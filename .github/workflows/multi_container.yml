@@ -25,12 +25,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build API Python Docker image
-        run: docker build -t api-python-test ./
-
       # Démarrage des conteneurs définis dans docker-compose.yml avant de lancer les tests
       - name: Start docker-compose services
-        run: docker compose -f docker-compose.yml up -d
+        run: docker compose up --build -d
 
       # Attente que l'API soit prête avant d’exécuter les tests
       - name: Wait for API to be ready
@@ -46,6 +43,9 @@ jobs:
       
       - name: container status
         run: docker ps
+
+      - name: check connection
+        run: curl -v http://localhost:5000/dbtest
 
       - name: Set up Python
         uses: actions/setup-python@v4
