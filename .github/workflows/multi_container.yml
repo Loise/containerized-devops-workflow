@@ -53,11 +53,11 @@ jobs:
             python-version: "3.10"
 
       - name: Install dependencies
-        run: docker exec containerized-devops-workflow-api-python pip install -r requirements.txt
+        run: docker exec containerized-devops-workflow-api-python-1 pip install -r requirements.txt
 
       # Exécution des tests pytest qui nécessitent l'environnement multi-conteneurs actif
       - name: Run tests against running API
-        run: docker exec containerized-devops-workflow-api-python pytest -m integration
+        run: docker exec containerized-devops-workflow-api-python-1 pytest -m integration
 
       # Arrêt et nettoyage des conteneurs après les tests
       - name: Stop and remove containers
