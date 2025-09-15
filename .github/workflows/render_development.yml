@@ -1,0 +1,41 @@
+name: provide render development environment
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["test multi container"]
+    types:
+      - completed
+
+jobs:
+  provide_render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+    
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.5
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Import Render Project
+        env:
+          TF_VAR_api_key: ${{ secrets.API_KEY }}
+          TF_VAR_owner_id: ${{ secrets.OWNER_ID }}
+        run: terraform import render_project.containerized_devops_workflow ${{ secrets.PROJECT_ID }}
+
+      - name: Terraform Plan
+        env:
+          TF_VAR_api_key: ${{ secrets.API_KEY }}
+          TF_VAR_owner_id: ${{ secrets.OWNER_ID }}
+          TF_VAR_environment: "development"
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        env:
+          TF_VAR_api_key: ${{ secrets.API_KEY }}
+          TF_VAR_owner_id: ${{ secrets.OWNER_ID }}
+        run: terraform apply -auto-approve tfplan
