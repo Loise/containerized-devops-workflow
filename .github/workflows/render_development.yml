@@ -21,11 +21,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Import Render Project
-        env:
-          TF_VAR_api_key: ${{ secrets.API_KEY }}
-          TF_VAR_owner_id: ${{ secrets.OWNER_ID }}
-        run: terraform import render_project.containerized_devops_workflow ${{ secrets.PROJECT_ID }}
+      # - name: Terraform Import Render Project
+      #   env:
+      #     TF_VAR_api_key: ${{ secrets.API_KEY }}
+      #     TF_VAR_owner_id: ${{ secrets.OWNER_ID }}
+      #   run: terraform import render_project.containerized_devops_workflow ${{ secrets.PROJECT_ID }}
 
       - name: Terraform Plan
         env:
