@@ -1,0 +1,76 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_key_pair" "deploiement_key" {
+  key_name   = "ma-cle-ssh"
+  public_key = file("~/.ssh/id_rsa.pub")
+}
+
+resource "aws_security_group" "sg_ssh_docker" {
+  name        = "sg-ssh-docker"
+  description = "Autoriser SSH et HTTP"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_instance" "docker_ec2" {
+  ami             = "ami-0c02fb55956c7d316" # Amazon Linux 2 us-east-1
+  instance_type   = "t2.micro"
+  key_name        = aws_key_pair.deploiement_key.key_name
+  security_groups = [aws_security_group.sg_ssh_docker.name]
+
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              amazon-linux-extras install docker -y
+              service docker start
+              systemctl enable docker
+
+              # Installer Docker Compose
+              curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              chmod +x /usr/local/bin/docker-compose
+
+              # Fichier docker-compose.yml injecté ici
+              cat << EOC > /home/ec2-user/docker-compose.yml
+              version: "3"
+              services:
+                web:
+                  image: nginx
+                  ports:
+                    - "80:80"
+              EOC
+
+              # Lancer docker-compose
+              cd /home/ec2-user
+              /usr/local/bin/docker-compose up -d
+              EOF
+
+  tags = {
+    Name = "EC2-Docker-Compose-Simple"
+  }
+}
+
+output "public_ip" {
+  description = "IP publique instance EC2"
+  value       = aws_instance.docker_ec2.public_ip
+}
