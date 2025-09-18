@@ -32,6 +32,14 @@ resource "aws_security_group" "app_server_sg" {
   name        = "app-server-sg"
   description = "Allow inbound traffic on ports 5000 and 5432, allow all outbound"
   vpc_id = data.aws_vpc.default.id
+  
+  ingress {
+    description = "Allow SSH (port 22) from my IP"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["85.169.87.98/32"]  # Remplacez par votre IP publique
+  }
 
   ingress {
     description = "Allow API Python port 5000"
@@ -65,6 +73,7 @@ resource "aws_security_group" "app_server_sg" {
 resource "aws_instance" "app_server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
+  key_name = "macbook-air"
   vpc_security_group_ids = [aws_security_group.app_server_sg.id]
   user_data = <<-EOF
                 #!/bin/bash
