@@ -24,10 +24,14 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
+data "aws_vpc" "default" {
+  default = true
+}
+
 resource "aws_security_group" "app_server_sg" {
   name        = "app-server-sg"
   description = "Allow inbound traffic on ports 5000 and 5432, allow all outbound"
-  vpc_id      = "votre_vpc_id"  # Remplacer par votre VPC
+  vpc_id = data.aws_vpc.default.id
 
   ingress {
     description = "Allow API Python port 5000"
