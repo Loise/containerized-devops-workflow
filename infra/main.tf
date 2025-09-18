@@ -38,7 +38,7 @@ resource "aws_security_group" "app_server_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["85.169.87.98/32"]  # Remplacez par votre IP publique
+    cidr_blocks = ["88.169.169.190/32"]  # Remplacez par votre IP publique
   }
 
   ingress {
@@ -77,23 +77,8 @@ resource "aws_instance" "app_server" {
   vpc_security_group_ids = [aws_security_group.app_server_sg.id]
   user_data = <<-EOF
                 #!/bin/bash
-                sudo apt-get update -y
-                sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-
-                # Ajout du dépôt Docker
-                curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-                sudo add-apt-repository \
-                "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-
-                sudo apt-get update -y
-                sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-
-                # Ajoute l'utilisateur ubuntu au groupe docker (optionnel)
-                sudo usermod -aG docker ubuntu
-
-                # Lancer le démon Docker
-                sudo systemctl enable docker
-                sudo systemctl start docker
+                sudo apt update
+                sudo apt install -y docker.io
 
                 # Télécharger docker-compose.yml depuis GitHub
                 curl -L -o /home/ubuntu/docker-compose.yml https://raw.githubusercontent.com/Loise/containerized-devops-workflow/refs/heads/main/docker-compose-aws.yml
