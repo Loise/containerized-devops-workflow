@@ -38,7 +38,7 @@ resource "aws_security_group" "app_server_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["88.169.169.190/32"]  # Remplacez par votre IP publique
+    cidr_blocks = ["0.0.0.0/32"]  # Remplacez par votre IP publique
   }
 
   ingress {
@@ -83,9 +83,18 @@ resource "aws_instance" "app_server" {
                 # Télécharger docker-compose.yml depuis GitHub
                 curl -L -o /home/ubuntu/docker-compose.yml https://raw.githubusercontent.com/Loise/containerized-devops-workflow/refs/heads/main/docker-compose-aws.yml
 
+                # install docker compose
+                DOCKER_CONFIG=/home/ubuntu/.docker
+                mkdir -p $DOCKER_CONFIG/cli-plugins
+                curl -SL https://github.com/docker/compose/releases/download/v2.39.3/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+                
+                # access to docker compose from current user
+                chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+                sudo usermod -aG docker ubuntu
+                newgrp docker
+
                 # Démarrer le compose
-                cd /home/ubuntu
-                sudo docker-compose up -d
+                docker-compose up -d
               EOF
   tags = {
     Name = "learn-terraform"
