@@ -94,7 +94,7 @@ resource "aws_instance" "app_server" {
                 newgrp docker
 
                 # Démarrer le compose
-                docker compose up -d
+                sudo -u ubuntu docker compose -f /home/ubuntu/docker-compose.yml up -d >> error.log
               EOF
   tags = {
     Name = "learn-terraform"
