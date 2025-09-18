@@ -48,8 +48,12 @@ resource "aws_instance" "app_server" {
                 sudo systemctl enable docker
                 sudo systemctl start docker
 
-                # Tester l'installation Docker
-                sudo docker run hello-world
+                # Télécharger docker-compose.yml depuis GitHub
+                curl -L -o /home/ubuntu/docker-compose.yml https://raw.githubusercontent.com/Loise/containerized-devops-workflow/refs/heads/main/docker-compose-aws.yml
+
+                # Démarrer le compose
+                cd /home/ubuntu
+                sudo docker-compose up -d
               EOF
   tags = {
     Name = "learn-terraform"
