@@ -1,11 +1,7 @@
-name: Terraform Deployment to AWS
+name: Terraform Provide AWS
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["provide render development environment"]
-    types:
-      - completed
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

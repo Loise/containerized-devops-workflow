@@ -28,53 +28,53 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_security_group" "app_server_sg" {
-  filter {
-    name   = "group-name"
-    values = ["app_server_sg"]
-  }
+resource "aws_security_group" "app_server_sg" {
+  name        = "app-server-sg"
+  description = "Allow inbound traffic on ports 5000 and 5432, allow all outbound"
   vpc_id = data.aws_vpc.default.id
+  
+  ingress {
+    description = "Allow SSH (port 22) from my IP"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["88.169.169.190/32"]  # Remplacez par votre IP publique
+  }
+
+  ingress {
+    description = "Allow API Python port 5000"
+    from_port   = 5000
+    to_port     = 5000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow Postgres port 5432"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "app-server-sg"
+  }
 }
-
-
-
-# resource "aws_security_group" "app_server_sg" {
-#   name        = "app-server-sg"
-#   description = "Allow inbound traffic on ports 5000 and 5432, allow all outbound"
-#   vpc_id = data.aws_vpc.default.id
-#   ingress {
-#     description = "Allow API Python port 5000"
-#     from_port   = 5000
-#     to_port     = 5000
-#     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-
-#   ingress {
-#     description = "Allow Postgres port 5432"
-#     from_port   = 5432
-#     to_port     = 5432
-#     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-
-#   egress {
-#     description = "Allow all outbound traffic"
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-
-#   tags = {
-#     Name = "app-server-sg"
-#   }
-# }
 
 resource "aws_instance" "app_server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
-  vpc_security_group_ids = [data.aws_security_group.app_server_sg.id]
+  key_name = "ci-cd-deploy"
+  vpc_security_group_ids = [aws_security_group.app_server_sg.id]
   user_data = <<-EOF
                 #!/bin/bash
                 sudo apt update

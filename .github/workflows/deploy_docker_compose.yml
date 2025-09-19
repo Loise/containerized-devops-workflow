@@ -1,0 +1,27 @@
+name: Deploy to EC2 with Docker Compose
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH key
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > private_key
+          chmod 600 private_key
+
+      - name: Deploy docker-compose to EC2
+        run: |
+          scp -i private_key -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/docker-compose.yml
+          ssh -i private_key -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+            cd /home/ubuntu &&
+            docker compose pull &&
+            docker compose down &&
+            docker compose up -d
+          "
