@@ -30,7 +30,7 @@ data "aws_vpc" "default" {
 
 data "aws_security_group" "app_server_sg" {
   filter {
-    name   = "app_server_sg"
+    name   = "group-name"
     values = ["app_server_sg"]
   }
   vpc_id = data.aws_vpc.default.id
