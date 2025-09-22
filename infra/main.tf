@@ -38,7 +38,7 @@ resource "aws_security_group" "app_server_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Remplacez par votre IP publique
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -100,3 +100,10 @@ resource "aws_instance" "app_server" {
     Name = "learn-terraform"
   }
 }
+
+# Provisionning
+# export AWS_ACCESS_KEY_ID=
+# export AWS_SECRET_ACCESS_KEY=
+# terraform init
+# terraform plan
+# terraform apply

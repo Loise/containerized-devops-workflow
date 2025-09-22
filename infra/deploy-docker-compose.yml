@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Copier docker-compose.yml
+      copy:
+        src: ../docker-compose-aws.yml
+        dest: /home/ubuntu/docker-compose.yml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Lancer la stack docker-compose
+      shell: |
+        docker compose -f /home/ubuntu/docker-compose.yml pull
+        docker compose -f /home/ubuntu/docker-compose.yml down
+        docker compose -f /home/ubuntu/docker-compose.yml up -d
+      args:
+        chdir: /home/ubuntu

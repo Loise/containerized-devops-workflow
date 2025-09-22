@@ -1,0 +1,27 @@
+name: Deploy to EC2 with Docker Compose and Ansible
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Ansible
+        run: sudo apt-get update && sudo apt-get install -y ansible openssh-client
+
+      - name: Set up SSH key
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > private_key
+          chmod 600 private_key
+
+      - name: Run Ansible playbook
+        working-directory: infra
+        run: |
+          ansible-playbook -i '${{ secrets.EC2_HOST }},' \
+            --private-key private_key \
+            --user ${{ secrets.EC2_USER }} \
+            deploy-docker-compose.yml
