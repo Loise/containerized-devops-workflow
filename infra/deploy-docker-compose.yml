@@ -9,12 +9,14 @@
         owner: ubuntu
         group: ubuntu
         mode: '0644'
-
-    - name: Lancer la stack docker-compose
-      shell: |
-        source /home/ubuntu/.bashrc
-        docker compose -f /home/ubuntu/docker-compose.yml pull
-        docker compose -f /home/ubuntu/docker-compose.yml down
-        docker compose -f /home/ubuntu/docker-compose.yml up -d
-      args:
-        chdir: /home/ubuntu
+    - name: Tear down existing services
+      community.docker.docker_compose_v2:
+        project_src: /home/ubuntu
+        state: absent
+    - name: Create and start services
+      community.docker.docker_compose_v2:
+        project_src: /home/ubuntu
+      register: output
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
