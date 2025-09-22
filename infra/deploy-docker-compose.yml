@@ -1,4 +1,3 @@
----
 - hosts: all
   become: yes
   tasks:
@@ -9,14 +8,19 @@
         owner: ubuntu
         group: ubuntu
         mode: '0644'
+
     - name: Tear down existing services
       community.docker.docker_compose_v2:
         project_src: /home/ubuntu
         state: absent
+      become_user: ubuntu
+
     - name: Create and start services
       community.docker.docker_compose_v2:
         project_src: /home/ubuntu
+      become_user: ubuntu
       register: output
+
     - name: Show results
       ansible.builtin.debug:
         var: output
