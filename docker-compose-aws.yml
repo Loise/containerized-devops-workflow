@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   api-python:
     image: ghcr.io/loise/containerized-devops-workflow/monapp:latest
