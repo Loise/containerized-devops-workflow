@@ -13,10 +13,8 @@
     - name: Lancer la stack docker-compose
       shell: |
         source /home/ubuntu/.bashrc
-        ~/.docker/cli-plugins/docker-compose -f /home/ubuntu/docker-compose.yml pull
-        ~/.docker/cli-plugins/docker-compose -f /home/ubuntu/docker-compose.yml down
-        ~/.docker/cli-plugins/docker-compose -f /home/ubuntu/docker-compose.yml up -d
-
+        docker compose -f /home/ubuntu/docker-compose.yml pull
+        docker compose -f /home/ubuntu/docker-compose.yml down
+        docker compose -f /home/ubuntu/docker-compose.yml up -d
       args:
-        executable: /bin/bash
         chdir: /home/ubuntu
