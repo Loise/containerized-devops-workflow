@@ -18,6 +18,9 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > private_key
           chmod 600 private_key
 
+      - name: Add EC2 host to known_hosts
+        run: ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+        
       - name: Run Ansible playbook
         working-directory: infra
         run: |
