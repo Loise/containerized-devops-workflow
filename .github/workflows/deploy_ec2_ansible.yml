@@ -28,7 +28,7 @@ jobs:
         working-directory: infra
         run: |
           ansible-playbook -i '${{ secrets.EC2_HOST }},' \
-            --private-key private_key \
+            --private-key ../infra/private_key \
             --user ${{ secrets.EC2_USER }} \
             --ssh-common-args='-o StrictHostKeyChecking=no' \
             deploy-docker-compose.yml
