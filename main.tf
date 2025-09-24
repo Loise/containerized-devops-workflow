@@ -6,8 +6,13 @@
 TODO pipeline dedicated
 
 Steps :
-Creer la clé d'API
+Creer la clé d'API (account setting)
 Creer le render.tfvars
+
+api_key=""
+owner_id=""
+environment="development"
+
 Recuperer le owner_id
 
 how to get owner_id : 
