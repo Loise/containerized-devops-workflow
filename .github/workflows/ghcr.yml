@@ -1,3 +1,8 @@
+#create new yml 
+#checkout + build docker image + push de l'image (sur le bon registry)
+#declenchement a la validation avec workflow_dispatch
+#declenchement a travers un workflow_run du precedent workflow
+
 name: Docker Publish to GHCR
 
 on:
